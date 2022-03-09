@@ -1,2 +1,4 @@
 /.idea/
 /target/
+/src/main/java/com/example/motya/blog/servlet/CookieServlet.java
+/src/main/java/com/example/motya/blog/servlet/SessionServlet.java

@@ -29,7 +29,6 @@ public class PostServlet extends HttpServlet {
                 printWriter.write("<li>");
                 printWriter.write(postDto.getTitle());
                 printWriter.write("</li>");
-
             });
             printWriter.write("</ul>");
 
