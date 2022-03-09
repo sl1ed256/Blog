@@ -19,12 +19,13 @@ public class PostService {
 
     public List<PostDto> findAllByUserId(Integer userId) {
         return postDao.findAllByUserId(userId).stream()
-                .map(postEntity -> new PostDto(
-                        postEntity.getId(),
-                        postEntity.getAuthor_id(),
-                        postEntity.getTitle(),
-                        postEntity.getPost_body()
-                ))
+                .map(postEntity -> PostDto.builder()
+                        .id(postEntity.getId())
+                        .author_id(postEntity.getAuthor_id())
+                        .title(postEntity.getTitle())
+                        .post_body(postEntity.getPost_body())
+                        .build()
+                )
                 .collect(toList());
     }
 
