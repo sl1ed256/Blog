@@ -18,7 +18,19 @@ public class PostService {
     }
 
     public List<PostDto> findAllByUserId(Integer userId) {
-        return postDao.findAllByUserId(userId).stream()
+        return postDao.findAllPostsByUserId(userId).stream()
+                .map(postEntity -> PostDto.builder()
+                        .id(postEntity.getId())
+                        .author_id(postEntity.getAuthor_id())
+                        .title(postEntity.getTitle())
+                        .post_body(postEntity.getPost_body())
+                        .build()
+                )
+                .collect(toList());
+    }
+
+    public List<PostDto> findAll() {
+        return postDao.findAll().stream()
                 .map(postEntity -> PostDto.builder()
                         .id(postEntity.getId())
                         .author_id(postEntity.getAuthor_id())
