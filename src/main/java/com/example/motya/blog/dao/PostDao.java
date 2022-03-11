@@ -1,12 +1,15 @@
 package com.example.motya.blog.dao;
 
 import com.example.motya.blog.entity.PostEntity;
+import com.example.motya.blog.exception.DaoException;
 import com.example.motya.blog.util.ConnectionManager;
 import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +22,19 @@ public class PostDao implements Dao<Integer, PostEntity> {
 
     public static final PostDao INSTANCE = new PostDao();
 
-    private static final String FIND_ALL_BY_USER_ID = "SELECT * FROM posts WHERE author_id = ?";
+    private static final String FIND_ALL_POSTS_BY_USER_ID_SQL = "SELECT id, author_id, title, post_body, date_posted FROM posts " +
+            "WHERE author_id = ?";
+    private static final String FIND_ALL_SQL = "SELECT id, author_id, title, post_body, date_posted FROM posts";
+    private static final String FIND_BY_ID_SQL = "SELECT id, author_id, title, post_body, date_posted FROM posts WHERE id = ?";
+    private static final String DELETE_SQL = "DELETE FROM posts WHERE id = ?";
+    private static final String UPDATE_SQL = "UPDATE posts SET title = ?, post_body = ? WHERE id = ?";
+    private static final String SAVE_SQL = "INSERT INTO posts (author_id, title, post_body) " +
+            "VALUES (?,?,?)";
 
-    @SneakyThrows
-    public List<PostEntity> findAllByUserId(Integer userId) {
+
+    public List<PostEntity> findAllPostsByUserId(Integer userId) {
         try (var connection = ConnectionManager.get();
-             var preparedStatement = connection.prepareStatement(FIND_ALL_BY_USER_ID)) {
+             var preparedStatement = connection.prepareStatement(FIND_ALL_POSTS_BY_USER_ID_SQL)) {
             preparedStatement.setObject(1, userId);
 
             var resultSet = preparedStatement.executeQuery();
@@ -33,32 +43,86 @@ public class PostDao implements Dao<Integer, PostEntity> {
                 posts.add(buildPost(resultSet));
             }
             return posts;
+        } catch (SQLException throwables) {
+            throw new DaoException(throwables);
         }
     }
 
     @Override
     public List<PostEntity> findAll() {
-        return null;
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(FIND_ALL_SQL)) {
+            var resultSet = preparedStatement.executeQuery();
+            List<PostEntity> postEntities = new ArrayList<>();
+            while (resultSet.next()) {
+                postEntities.add(buildPost(resultSet));
+            }
+            return postEntities;
+        } catch (SQLException throwables) {
+            throw new DaoException(throwables);
+        }
     }
 
     @Override
     public Optional<PostEntity> findById(Integer id) {
-        return Optional.empty();
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
+            preparedStatement.setInt(1, id);
+            var resultSet = preparedStatement.executeQuery();
+            PostEntity postEntity = null;
+            if (resultSet.next()) {
+                postEntity = buildPost(resultSet);
+            }
+            return Optional.ofNullable(postEntity);
+        } catch (SQLException throwables) {
+            throw new DaoException(throwables);
+        }
     }
 
     @Override
     public boolean delete(Integer id) {
-        return false;
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(DELETE_SQL)) {
+            preparedStatement.setInt(1, id);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException throwables) {
+            throw new DaoException(throwables);
+        }
     }
 
     @Override
     public void update(PostEntity entity) {
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
+            preparedStatement.setString(1, entity.getTitle());
+            preparedStatement.setString(2, entity.getPost_body());
+            preparedStatement.setInt(3, entity.getId());
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException throwables) {
+            throw new DaoException(throwables);
+        }
 
     }
 
     @Override
     public PostEntity save(PostEntity entity) {
-        return null;
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setInt(1, entity.getAuthor_id());
+            preparedStatement.setString(2, entity.getTitle());
+            preparedStatement.setString(3, entity.getPost_body());
+
+            preparedStatement.executeUpdate();
+
+            var generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                entity.setId(generatedKeys.getInt("id"));
+            }
+            return entity;
+        } catch (SQLException throwables) {
+            throw new DaoException(throwables);
+        }
     }
 
     private PostEntity buildPost(ResultSet resultSet) throws SQLException {

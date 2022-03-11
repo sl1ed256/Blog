@@ -10,8 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-@WebServlet("/posts")
-public class PostServlet extends HttpServlet {
+@WebServlet("/postsByUser")
+public class UserPostServlet extends HttpServlet {
 
     private final PostService postService = PostService.getInstance();
 
