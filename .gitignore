@@ -2,3 +2,11 @@
 /target/
 /src/main/java/com/example/motya/blog/servlet/CookieServlet.java
 /src/main/java/com/example/motya/blog/servlet/SessionServlet.java
+/src/main/java/com/example/motya/blog/servlet/DispatcherServlet.java
+/src/main/java/com/example/motya/blog/servlet/ContentServlet.java
+/src/main/webapp/css/
+/src/main/webapp/Img/
+/src/main/webapp/js/
+/src/main/webapp/WEB-INF/jsp/content.jsp
+/src/main/webapp/WEB-INF/jsp/footer.jsp
+/src/main/webapp/WEB-INF/jsp/header.jsp

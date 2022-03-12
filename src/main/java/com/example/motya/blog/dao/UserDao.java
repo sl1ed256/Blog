@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
@@ -91,10 +91,10 @@ public class UserDao implements Dao<Integer, UserEntity> {
     @Override
     public UserEntity save(UserEntity entity) {
         try (var connection = ConnectionManager.get();
-             var preparedStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
+             var preparedStatement = connection.prepareStatement(SAVE_SQL, RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, entity.getNickname());
             preparedStatement.setString(2, entity.getEmail());
-            preparedStatement.setString(3, entity.getRole().toString());
+            preparedStatement.setString(3, entity.getRole().name());
             preparedStatement.setString(4, entity.getPassword());
             preparedStatement.setString(5, entity.getAbout());
 

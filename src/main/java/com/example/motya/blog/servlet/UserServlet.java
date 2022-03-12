@@ -1,6 +1,7 @@
 package com.example.motya.blog.servlet;
 
 import com.example.motya.blog.service.UserService;
+import com.example.motya.blog.util.JspHelper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,18 +18,10 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-        resp.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        req.setAttribute("users", userService.findAll());
 
-        try (var printWriter = resp.getWriter()) {
-            printWriter.write("<h1>Список пользователей</h1>");
-            printWriter.write("<ul>");
-            userService.findAll().forEach(userDto -> {
-                printWriter.write("<li>");
-                printWriter.write(String.format("<a href=/Blog/postsByUser?userId=%d>%s</a>", userDto.getId(), userDto.getNickname()));
-                printWriter.write("</li>");
-            });
-            printWriter.write("</ul>");
-        }
+        req.getRequestDispatcher(JspHelper.getPath("users"))
+                        .forward(req,resp);
+
     }
 }
