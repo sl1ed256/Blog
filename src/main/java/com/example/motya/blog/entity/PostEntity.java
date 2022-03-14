@@ -18,4 +18,5 @@ public class PostEntity {
     private String title;
     private String post_body;
     private LocalDateTime date_posted;
+    private String image;
 }

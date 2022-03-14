@@ -2,7 +2,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Welcome to site!</title>
+    <title>Welcome to web blog!</title>
 </head>
 <body>
     <h1>Hello, world!</h1>

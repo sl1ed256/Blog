@@ -6,6 +6,7 @@ import com.example.motya.blog.exception.ValidationException;
 import com.example.motya.blog.service.UserService;
 import com.example.motya.blog.util.JspHelper;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +15,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+
+@MultipartConfig(fileSizeThreshold = 1024 * 1024)
 @WebServlet("/registration")
 public class RegistrationServlet extends HttpServlet {
 
@@ -28,12 +31,14 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         var userDto = CreateUserDto.builder()
                 .nickname(req.getParameter("username"))
                 .email(req.getParameter("email"))
                 .role(req.getParameter("role"))
                 .password(req.getParameter("password"))
                 .about(req.getParameter("about"))
+                .image(req.getPart("image"))
                 .build();
 
         try {

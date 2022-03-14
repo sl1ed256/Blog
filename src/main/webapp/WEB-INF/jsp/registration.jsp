@@ -5,18 +5,21 @@
     <title>Title</title>
 </head>
 <body>
-<form action="/Blog/registration" method="post">
+<form action="${pageContext.request.contextPath}/registration" method="post" enctype="multipart/form-data">
     <label for="username">Name:
-        <input type="text" name="username" id="username">
+        <input type="text" name="username" id="username" required>
     </label><br>
     <label for="email">Email:
-        <input type="text" name="email" id="email">
+        <input type="text" name="email" id="email" required>
     </label><br>
     <label for="password">Password:
-        <input type="password" name="password" id="password">
+        <input type="password" name="password" id="password" required>
     </label><br>
     <label for="about">About:
-        <input type="text" name="about" id="about">
+        <input type="text" name="about" id="about" required>
+    </label><br>
+    <label for="image">Image:
+        <input type="file" name="image" id="image" required>
     </label><br>
     <select name="role" id="role">Role:
         <c:forEach var="role" items="${requestScope.roles}">

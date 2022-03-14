@@ -24,7 +24,7 @@ public class PostDao implements Dao<Integer, PostEntity> {
 
     private static final String FIND_ALL_POSTS_BY_USER_ID_SQL = "SELECT id, author_id, title, post_body, date_posted FROM posts " +
             "WHERE author_id = ?";
-    private static final String FIND_ALL_SQL = "SELECT id, author_id, title, post_body, date_posted FROM posts";
+    private static final String FIND_ALL_SQL = "SELECT id, author_id, title, post_body, date_posted, image FROM posts ORDER BY date_posted DESC";
     private static final String FIND_BY_ID_SQL = "SELECT id, author_id, title, post_body, date_posted FROM posts WHERE id = ?";
     private static final String DELETE_SQL = "DELETE FROM posts WHERE id = ?";
     private static final String UPDATE_SQL = "UPDATE posts SET title = ?, post_body = ? WHERE id = ?";
@@ -131,7 +131,8 @@ public class PostDao implements Dao<Integer, PostEntity> {
                 resultSet.getObject("author_id", Integer.class),
                 resultSet.getObject("title", String.class),
                 resultSet.getObject("post_body", String.class),
-                resultSet.getObject("date_posted", Timestamp.class).toLocalDateTime()
+                resultSet.getObject("date_posted", Timestamp.class).toLocalDateTime(),
+                resultSet.getObject("image", String.class)
         );
 
     }
