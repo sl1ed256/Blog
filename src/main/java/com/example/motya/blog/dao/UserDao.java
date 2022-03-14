@@ -21,13 +21,13 @@ public class UserDao implements Dao<Integer, UserEntity> {
 
     public static final UserDao INSTANCE = new UserDao();
 
-    private static final String FIND_ALL_SQL = "SELECT id, nickname, email, role, password, about, created_at FROM users";
+    private static final String FIND_ALL_SQL = "SELECT id, nickname, email, role, password, about, created_at, image FROM users";
     private static final String FIND_BY_ID_SQL = "SELECT id, nickname, email, role, password, about, created_at FROM users WHERE id = ?";
     private static final String DELETE_SQL = "DELETE FROM users WHERE id = ?";
     public static final String UPDATE_SQL = "UPDATE users SET nickname = ?, email = ?, role = ?, password = ?, about = ?" +
             "where id = ?";
-    public static final String SAVE_SQL = "INSERT INTO users (nickname, email, role, password, about)  " +
-            "VALUES (?,?,?,?,?)";
+    public static final String SAVE_SQL = "INSERT INTO users (nickname, email, role, password, about, image)  " +
+            "VALUES (?,?,?,?,?,?)";
 
     @Override
     public List<UserEntity> findAll() {
@@ -92,11 +92,12 @@ public class UserDao implements Dao<Integer, UserEntity> {
     public UserEntity save(UserEntity entity) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(SAVE_SQL, RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, entity.getNickname());
-            preparedStatement.setString(2, entity.getEmail());
-            preparedStatement.setString(3, entity.getRole().name());
-            preparedStatement.setString(4, entity.getPassword());
-            preparedStatement.setString(5, entity.getAbout());
+            preparedStatement.setObject(1, entity.getNickname());
+            preparedStatement.setObject(2, entity.getEmail());
+            preparedStatement.setObject(3, entity.getRole().name());
+            preparedStatement.setObject(4, entity.getPassword());
+            preparedStatement.setObject(5, entity.getAbout());
+            preparedStatement.setObject(6, entity.getImage());
 
             preparedStatement.executeUpdate();
 
@@ -122,6 +123,7 @@ public class UserDao implements Dao<Integer, UserEntity> {
                 resultSet.getObject("email", String.class),
                 RoleEnum.valueOf(resultSet.getObject("role", String.class)),
                 resultSet.getObject("password", String.class),
+                resultSet.getObject("image", String.class),
                 resultSet.getObject("about", String.class),
                 resultSet.getObject("created_at", Timestamp.class).toLocalDateTime()
         );

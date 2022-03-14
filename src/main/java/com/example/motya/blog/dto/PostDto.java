@@ -11,4 +11,5 @@ public class PostDto {
     Integer author_id;
     String title;
     String post_body;
+    String image;
 }

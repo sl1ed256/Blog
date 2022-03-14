@@ -36,6 +36,7 @@ public class PostService {
                         .author_id(postEntity.getAuthor_id())
                         .title(postEntity.getTitle())
                         .post_body(postEntity.getPost_body())
+                        .image(postEntity.getImage())
                         .build()
                 )
                 .collect(toList());

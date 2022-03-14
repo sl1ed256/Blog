@@ -6,6 +6,7 @@ import com.example.motya.blog.entity.UserEntity;
 
 public class CreateUserMapper implements Mapper<CreateUserDto, UserEntity> {
 
+    private static final String IMAGE_FOLDER = "users/";
     private static final CreateUserMapper INSTANCE = new CreateUserMapper();
 
     @Override
@@ -16,6 +17,7 @@ public class CreateUserMapper implements Mapper<CreateUserDto, UserEntity> {
                 .role(RoleEnum.valueOf(object.getRole()))
                 .password(object.getPassword())
                 .about(object.getAbout())
+                .image(IMAGE_FOLDER + object.getImage().getSubmittedFileName())
                 .build();
 
     }

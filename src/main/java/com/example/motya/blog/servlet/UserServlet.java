@@ -21,7 +21,7 @@ public class UserServlet extends HttpServlet {
         req.setAttribute("users", userService.findAll());
 
         req.getRequestDispatcher(JspHelper.getPath("users"))
-                        .forward(req,resp);
+                .forward(req, resp);
 
     }
 }
