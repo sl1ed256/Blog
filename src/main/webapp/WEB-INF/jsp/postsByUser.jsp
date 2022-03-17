@@ -10,7 +10,7 @@
     <h1>Статьи пользователя</h1>
     <ul>
         <c:forEach var="post" items="${requestScope.posts}">
-            <li>${post.title}</li>
+            <li><a href=${pageContext.request.contextPath}/post?postId=${post.id}>${post.title}</a></li>
         </c:forEach>
     </ul>
 </body>

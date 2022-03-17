@@ -2,7 +2,7 @@ package com.example.motya.blog.servlet;
 
 import com.example.motya.blog.service.ImageService;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletOutputStream;
+
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

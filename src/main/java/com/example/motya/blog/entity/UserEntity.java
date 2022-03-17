@@ -18,7 +18,7 @@ public class UserEntity {
     private String email;
     private RoleEnum role;
     private String password;
-    private String image;
     private String about;
     private LocalDateTime created_at;
+    private String image;
 }

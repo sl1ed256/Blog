@@ -12,7 +12,7 @@
     <c:forEach var="post" items="${requestScope.posts}">
         <img width="150" height="150" src="${pageContext.request.contextPath}/image/${post.image}" alt=""><br>
         <li>
-            <a href=${pageContext.request.contextPath}/posts?id=${post.id}>${post.title}</a>
+            <a href=${pageContext.request.contextPath}/post?postId=${post.id}>${post.title}</a>
         </li>
     </c:forEach>
 </ul>
