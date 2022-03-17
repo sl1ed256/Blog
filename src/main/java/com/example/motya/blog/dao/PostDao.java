@@ -4,9 +4,8 @@ import com.example.motya.blog.entity.PostEntity;
 import com.example.motya.blog.exception.DaoException;
 import com.example.motya.blog.util.ConnectionManager;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -22,10 +21,10 @@ public class PostDao implements Dao<Integer, PostEntity> {
 
     public static final PostDao INSTANCE = new PostDao();
 
-    private static final String FIND_ALL_POSTS_BY_USER_ID_SQL = "SELECT id, author_id, title, post_body, date_posted FROM posts " +
+    private static final String FIND_ALL_POSTS_BY_USER_ID_SQL = "SELECT id, author_id, title, post_body, date_posted, image FROM posts " +
             "WHERE author_id = ?";
     private static final String FIND_ALL_SQL = "SELECT id, author_id, title, post_body, date_posted, image FROM posts ORDER BY date_posted DESC";
-    private static final String FIND_BY_ID_SQL = "SELECT id, author_id, title, post_body, date_posted FROM posts WHERE id = ?";
+    private static final String FIND_BY_ID_SQL = "SELECT id, author_id, title, post_body, date_posted, image FROM posts WHERE id = ?";
     private static final String DELETE_SQL = "DELETE FROM posts WHERE id = ?";
     private static final String UPDATE_SQL = "UPDATE posts SET title = ?, post_body = ? WHERE id = ?";
     private static final String SAVE_SQL = "INSERT INTO posts (author_id, title, post_body) " +
@@ -63,6 +62,7 @@ public class PostDao implements Dao<Integer, PostEntity> {
         }
     }
 
+    @SneakyThrows
     @Override
     public Optional<PostEntity> findById(Integer id) {
         try (var connection = ConnectionManager.get();
@@ -74,8 +74,6 @@ public class PostDao implements Dao<Integer, PostEntity> {
                 postEntity = buildPost(resultSet);
             }
             return Optional.ofNullable(postEntity);
-        } catch (SQLException throwables) {
-            throw new DaoException(throwables);
         }
     }
 

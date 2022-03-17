@@ -5,6 +5,9 @@
     <title>Welcome to web blog!</title>
 </head>
 <body>
-    <h1>Hello, world!</h1>
+<p style="text-align: right;"><a href="${pageContext.request.contextPath}/registration">Регистрация</a></p>
+<br>
+<a href=${pageContext.request.contextPath}/posts>Все статьи</a>
+
 </body>
 </html>

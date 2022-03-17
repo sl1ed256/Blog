@@ -5,7 +5,10 @@ import com.example.motya.blog.entity.UserEntity;
 import com.example.motya.blog.exception.DaoException;
 import com.example.motya.blog.util.ConnectionManager;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -22,13 +25,32 @@ public class UserDao implements Dao<Integer, UserEntity> {
     public static final UserDao INSTANCE = new UserDao();
 
     private static final String FIND_ALL_SQL = "SELECT id, nickname, email, role, password, about, created_at, image FROM users";
-    private static final String FIND_BY_ID_SQL = "SELECT id, nickname, email, role, password, about, created_at FROM users WHERE id = ?";
+    private static final String FIND_BY_ID_SQL = "SELECT id, nickname, email, role, password, about, created_at, image FROM users WHERE id = ?";
     private static final String DELETE_SQL = "DELETE FROM users WHERE id = ?";
     public static final String UPDATE_SQL = "UPDATE users SET nickname = ?, email = ?, role = ?, password = ?, about = ?" +
             "where id = ?";
     public static final String SAVE_SQL = "INSERT INTO users (nickname, email, role, password, about, image)  " +
             "VALUES (?,?,?,?,?,?)";
+    private static final String GET_BY_EMAIL_AND_PASSWORD = "SELECT id, nickname, email, role, password, about, created_at, image FROM users where email = ? and password = ?";
 
+    @SneakyThrows
+    public Optional<UserEntity> findByEmailAndPassword(String email, String password) {
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(GET_BY_EMAIL_AND_PASSWORD)) {
+            preparedStatement.setObject(1, email);
+            preparedStatement.setObject(2, password);
+
+            var resultSet = preparedStatement.executeQuery();
+            UserEntity user = null;
+            if (resultSet.next()) {
+                user = buildUser(resultSet);
+            }
+            return Optional.ofNullable(user);
+        }
+
+    }
+
+    @SneakyThrows
     @Override
     public List<UserEntity> findAll() {
         try (var connection = ConnectionManager.get();
@@ -39,11 +61,10 @@ public class UserDao implements Dao<Integer, UserEntity> {
                 userEntities.add(buildUser(resultSet));
             }
             return userEntities;
-        } catch (SQLException throwables) {
-            throw new DaoException(throwables);
         }
     }
 
+    @SneakyThrows
     @Override
     public Optional<UserEntity> findById(Integer id) {
         try (var connection = ConnectionManager.get();
@@ -56,8 +77,6 @@ public class UserDao implements Dao<Integer, UserEntity> {
                 userEntity = buildUser(resultSet);
             }
             return Optional.ofNullable(userEntity);
-        } catch (SQLException throwables) {
-            throw new DaoException(throwables);
         }
     }
 
@@ -88,6 +107,7 @@ public class UserDao implements Dao<Integer, UserEntity> {
         }
     }
 
+    @SneakyThrows
     @Override
     public UserEntity save(UserEntity entity) {
         try (var connection = ConnectionManager.get();
@@ -107,8 +127,6 @@ public class UserDao implements Dao<Integer, UserEntity> {
             }
             return entity;
 
-        } catch (SQLException throwables) {
-            throw new DaoException(throwables);
         }
     }
 
@@ -117,15 +135,15 @@ public class UserDao implements Dao<Integer, UserEntity> {
     }
 
     private UserEntity buildUser(ResultSet resultSet) throws SQLException {
-        return new UserEntity(
-                resultSet.getObject("id", Integer.class),
-                resultSet.getObject("nickname", String.class),
-                resultSet.getObject("email", String.class),
-                RoleEnum.valueOf(resultSet.getObject("role", String.class)),
-                resultSet.getObject("password", String.class),
-                resultSet.getObject("image", String.class),
-                resultSet.getObject("about", String.class),
-                resultSet.getObject("created_at", Timestamp.class).toLocalDateTime()
-        );
+        return UserEntity.builder()
+                .id(resultSet.getObject("id", Integer.class))
+                .nickname(resultSet.getObject("nickname", String.class))
+                .email(resultSet.getObject("email", String.class))
+                .role(RoleEnum.valueOf(resultSet.getObject("role", String.class)))
+                .password(resultSet.getObject("password", String.class))
+                .about(resultSet.getObject("about", String.class))
+                .created_at(resultSet.getObject("created_at", Timestamp.class).toLocalDateTime())
+                .image(resultSet.getObject("image", String.class))
+                .build();
     }
 }
