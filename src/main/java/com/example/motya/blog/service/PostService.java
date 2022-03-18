@@ -1,8 +1,13 @@
 package com.example.motya.blog.service;
 
 import com.example.motya.blog.dao.PostDao;
+import com.example.motya.blog.dto.CreatePostDto;
 import com.example.motya.blog.dto.PostDto;
 import com.example.motya.blog.entity.PostEntity;
+import com.example.motya.blog.exception.ValidationException;
+import com.example.motya.blog.mapper.CreatePostMapper;
+import com.example.motya.blog.validator.CreatePostValidator;
+import lombok.SneakyThrows;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,10 +18,27 @@ public class PostService {
 
     private static final PostService INSTANCE = new PostService();
 
+
     private final PostDao postDao = PostDao.getInstance();
+    private final CreatePostValidator createPostValidator = CreatePostValidator.getInstance();
+    private final CreatePostMapper createPostMapper = CreatePostMapper.getInstance();
+    private final ImageService imageService = ImageService.getInstance();
 
     private PostService() {
 
+    }
+
+    @SneakyThrows
+    public Integer create(CreatePostDto postDto) {
+        var validationResult = createPostValidator.isValid(postDto);
+        if (!validationResult.isValid()) {
+            throw new ValidationException(validationResult.getErrors());
+        }
+        var postEntity = createPostMapper.mapFrom(postDto);
+        imageService.upload(postEntity.getImage(), postDto.getImage().getInputStream());
+        postDao.save(postEntity);
+
+        return postEntity.getId();
     }
 
     public List<PostDto> findAllByUserId(Integer userId) {

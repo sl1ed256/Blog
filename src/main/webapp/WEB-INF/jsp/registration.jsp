@@ -21,7 +21,7 @@
     <label for="image">Image:
         <input type="file" name="image" id="image" required>
     </label><br>
-    <select name="role" id="role">Role:
+    <select name="role" id="role" hidden>Role:
         <c:forEach var="role" items="${requestScope.roles}">
             <option value="${role}">${role}</option>
         </c:forEach>
