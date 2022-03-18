@@ -2,6 +2,7 @@ package com.example.motya.blog.servlet;
 
 import com.example.motya.blog.service.PostService;
 import com.example.motya.blog.util.JspHelper;
+import com.example.motya.blog.util.UrlPath;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -10,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/posts")
+@WebServlet(UrlPath.POSTS)
 public class PostsServlet extends HttpServlet {
 
     private final PostService postService = PostService.getInstance();

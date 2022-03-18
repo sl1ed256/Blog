@@ -27,8 +27,8 @@ public class PostDao implements Dao<Integer, PostEntity> {
     private static final String FIND_BY_ID_SQL = "SELECT id, author_id, title, post_body, date_posted, image FROM posts WHERE id = ?";
     private static final String DELETE_SQL = "DELETE FROM posts WHERE id = ?";
     private static final String UPDATE_SQL = "UPDATE posts SET title = ?, post_body = ? WHERE id = ?";
-    private static final String SAVE_SQL = "INSERT INTO posts (author_id, title, post_body) " +
-            "VALUES (?,?,?)";
+    private static final String SAVE_SQL = "INSERT INTO posts (author_id, title, post_body, image) " +
+            "VALUES (?,?,?,?)";
 
 
     public List<PostEntity> findAllPostsByUserId(Integer userId) {
@@ -103,13 +103,15 @@ public class PostDao implements Dao<Integer, PostEntity> {
 
     }
 
+    @SneakyThrows
     @Override
     public PostEntity save(PostEntity entity) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setInt(1, entity.getAuthor_id());
-            preparedStatement.setString(2, entity.getTitle());
-            preparedStatement.setString(3, entity.getPost_body());
+            preparedStatement.setObject(1, entity.getAuthor_id());
+            preparedStatement.setObject(2, entity.getTitle());
+            preparedStatement.setObject(3, entity.getPost_body());
+            preparedStatement.setObject(4, entity.getImage());
 
             preparedStatement.executeUpdate();
 
@@ -118,8 +120,6 @@ public class PostDao implements Dao<Integer, PostEntity> {
                 entity.setId(generatedKeys.getInt("id"));
             }
             return entity;
-        } catch (SQLException throwables) {
-            throw new DaoException(throwables);
         }
     }
 

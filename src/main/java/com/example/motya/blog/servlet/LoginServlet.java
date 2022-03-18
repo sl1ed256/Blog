@@ -3,6 +3,7 @@ package com.example.motya.blog.servlet;
 import com.example.motya.blog.dto.UserDto;
 import com.example.motya.blog.service.UserService;
 import com.example.motya.blog.util.JspHelper;
+import com.example.motya.blog.util.UrlPath;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -12,7 +13,7 @@ import lombok.SneakyThrows;
 
 import java.io.IOException;
 
-@WebServlet("/login")
+@WebServlet(UrlPath.LOGIN)
 public class LoginServlet extends HttpServlet {
 
     private final UserService userService = UserService.getInstance();
@@ -34,7 +35,7 @@ public class LoginServlet extends HttpServlet {
 
     @SneakyThrows
     private void onLoginFail(HttpServletRequest req, HttpServletResponse resp) {
-        resp.sendRedirect("/login?error&email=" + req.getParameter("email"));
+        resp.sendRedirect(req.getContextPath() + "/login?error&email=" + req.getParameter("email"));
     }
 
     @SneakyThrows

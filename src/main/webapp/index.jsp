@@ -5,9 +5,7 @@
     <title>Welcome to web blog!</title>
 </head>
 <body>
-<p style="text-align: right;"><a href="${pageContext.request.contextPath}/registration">Регистрация</a></p>
-<br>
-<a href=${pageContext.request.contextPath}/posts>Все статьи</a>
-
+<%RequestDispatcher dispatch = request.getRequestDispatcher("/posts");
+    dispatch.include(request, response);%>
 </body>
 </html>

@@ -7,6 +7,7 @@
     <title>Статьи</title>
 </head>
 <body>
+<%@ include file="header.jsp" %>
 <h1>Все статьи</h1>
 <ul>
     <c:forEach var="post" items="${requestScope.posts}">
