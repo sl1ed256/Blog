@@ -6,12 +6,9 @@ import lombok.Value;
 
 @Value
 @Builder
-
-public class CreateUserDto {
+public class UpdateUserDto {
+    Integer id;
     String nickname;
-    String email;
-    String role;
-    String password;
     String about;
     Part image;
 }

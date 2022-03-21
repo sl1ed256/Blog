@@ -32,17 +32,16 @@ public class ImageService {
 
     }
 
-    public static ImageService getInstance() {
-        return INSTANCE;
-    }
-
     @SneakyThrows
     public Optional<InputStream> get(String imagePath) {
         var imageFullPath = Path.of(basePath, imagePath);
 
-
         return Files.exists(imageFullPath) ?
                 Optional.of(Files.newInputStream(imageFullPath))
                 : Optional.empty();
+    }
+
+    public static ImageService getInstance() {
+        return INSTANCE;
     }
 }

@@ -37,7 +37,7 @@ public class CreatePostServlet extends HttpServlet {
 
         try {
             postService.create(createPostDto);
-            resp.sendRedirect("/posts");
+            resp.sendRedirect(req.getContextPath() + "/posts");
         } catch (ValidationException exception) {
             req.setAttribute("errors", exception.getErrors());
             doGet(req, resp);

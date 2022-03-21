@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import static com.example.motya.blog.util.UrlPath.LOGIN;
+import static com.example.motya.blog.util.UrlPath.LOGOUT;
 import static com.example.motya.blog.util.UrlPath.POST;
 import static com.example.motya.blog.util.UrlPath.POSTS;
 import static com.example.motya.blog.util.UrlPath.REGISTRATION;
@@ -23,7 +24,7 @@ import static com.example.motya.blog.util.UrlPath.REGISTRATION;
 @WebFilter("/*")
 public class AuthorizationFilter implements Filter {
 
-    private static final Set<String> PUBLIC_PATH = Set.of(REGISTRATION, LOGIN, POSTS, POST);
+    private static final Set<String> PUBLIC_PATH = Set.of(REGISTRATION, LOGIN, POSTS, POST, LOGOUT);
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -40,7 +41,7 @@ public class AuthorizationFilter implements Filter {
 
     private boolean isUserLoggedIn(ServletRequest servletRequest) {
         var user = (UserDto) ((HttpServletRequest) servletRequest).getSession().getAttribute("user");
-        return user != null && user.getRole() == RoleEnum.admin;
+        return user != null && (user.getRole() == RoleEnum.user || user.getRole() == RoleEnum.admin);
     }
 
     private boolean isPublicPath(String uri) {

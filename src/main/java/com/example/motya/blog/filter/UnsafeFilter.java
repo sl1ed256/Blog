@@ -22,7 +22,7 @@ public class UnsafeFilter implements Filter {
         if (user != null && user.getRole() == RoleEnum.admin) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
-            ((HttpServletResponse) servletResponse).sendRedirect("/posts");
+            ((HttpServletResponse) servletResponse).sendRedirect(((HttpServletRequest) servletRequest).getContextPath() + "/posts");
         }
     }
 }

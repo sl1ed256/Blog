@@ -6,6 +6,11 @@
         <form action="/Blog/posts">
             <button type="submit">На главную</button>
         </form>
+        <c:if test="${not empty sessionScope.user}">
+            <form action="${pageContext.request.contextPath}/user">
+                <button type="submit">Мой профиль</button>
+            </form>
+        </c:if>
     </span>
 
 
