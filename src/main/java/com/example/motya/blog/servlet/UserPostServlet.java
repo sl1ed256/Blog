@@ -23,4 +23,5 @@ public class UserPostServlet extends HttpServlet {
         req.getRequestDispatcher(JspHelper.getPath("postsByUser"))
                 .forward(req, resp);
     }
+
 }

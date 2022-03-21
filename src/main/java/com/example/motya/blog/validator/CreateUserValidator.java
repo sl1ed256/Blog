@@ -10,13 +10,13 @@ public class CreateUserValidator implements Validator<CreateUserDto> {
     @Override
     public ValidationResult isValid(CreateUserDto object) {
         var validationResult = new ValidationResult();
-        if (RoleEnum.find(object.getRole()) == null){
-            validationResult.add(Error.of("invalid.role","Role is invalid"));
+        if ((RoleEnum.find(object.getRole())).isEmpty()) {
+            validationResult.add(Error.of("invalid.role", "Role is invalid"));
         }
         return validationResult;
     }
 
-    public static CreateUserValidator getInstance(){
+    public static CreateUserValidator getInstance() {
         return INSTANCE;
     }
 }

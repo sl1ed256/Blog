@@ -7,13 +7,16 @@ import com.example.motya.blog.entity.PostEntity;
 import com.example.motya.blog.exception.ValidationException;
 import com.example.motya.blog.mapper.CreatePostMapper;
 import com.example.motya.blog.validator.CreatePostValidator;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
+import static lombok.AccessLevel.PRIVATE;
 
+@NoArgsConstructor(access = PRIVATE)
 public class PostService {
 
     private static final PostService INSTANCE = new PostService();
@@ -23,10 +26,6 @@ public class PostService {
     private final CreatePostValidator createPostValidator = CreatePostValidator.getInstance();
     private final CreatePostMapper createPostMapper = CreatePostMapper.getInstance();
     private final ImageService imageService = ImageService.getInstance();
-
-    private PostService() {
-
-    }
 
     @SneakyThrows
     public Integer create(CreatePostDto postDto) {
@@ -40,6 +39,7 @@ public class PostService {
 
         return postEntity.getId();
     }
+
 
     public List<PostDto> findAllByUserId(Integer userId) {
         return postDao.findAllPostsByUserId(userId).stream()
@@ -64,6 +64,10 @@ public class PostService {
                         .build()
                 )
                 .collect(toList());
+    }
+
+    public boolean delete(Integer postId) {
+        return postDao.delete(postId);
     }
 
     public Optional<PostEntity> findById(Integer postId) {

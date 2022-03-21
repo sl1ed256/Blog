@@ -15,5 +15,6 @@
 <p style="text-align: right">
     ${requestScope.post.get().date_posted}
 </p>
+
 </body>
 </html>

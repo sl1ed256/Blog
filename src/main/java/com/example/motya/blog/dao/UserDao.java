@@ -2,13 +2,10 @@ package com.example.motya.blog.dao;
 
 import com.example.motya.blog.entity.RoleEnum;
 import com.example.motya.blog.entity.UserEntity;
-import com.example.motya.blog.exception.DaoException;
 import com.example.motya.blog.util.ConnectionManager;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -27,7 +24,7 @@ public class UserDao implements Dao<Integer, UserEntity> {
     private static final String FIND_ALL_SQL = "SELECT id, nickname, email, role, password, about, created_at, image FROM users";
     private static final String FIND_BY_ID_SQL = "SELECT id, nickname, email, role, password, about, created_at, image FROM users WHERE id = ?";
     private static final String DELETE_SQL = "DELETE FROM users WHERE id = ?";
-    public static final String UPDATE_SQL = "UPDATE users SET nickname = ?, email = ?, role = ?, password = ?, about = ?" +
+    public static final String UPDATE_SQL = "UPDATE users SET nickname = ?, about = ?, image = ?" +
             "where id = ?";
     public static final String SAVE_SQL = "INSERT INTO users (nickname, email, role, password, about, image)  " +
             "VALUES (?,?,?,?,?,?)";
@@ -80,30 +77,28 @@ public class UserDao implements Dao<Integer, UserEntity> {
         }
     }
 
+    @SneakyThrows
     @Override
     public boolean delete(Integer id) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(DELETE_SQL)) {
             preparedStatement.setInt(1, id);
             return preparedStatement.executeUpdate() > 0;
-        } catch (SQLException throwables) {
-            throw new DaoException(throwables);
         }
     }
 
+    @SneakyThrows
     @Override
     public void update(UserEntity entity) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
-            preparedStatement.setString(1, entity.getNickname());
-            preparedStatement.setString(2, entity.getEmail());
-            preparedStatement.setString(3, entity.getRole().toString());
-            preparedStatement.setString(4, entity.getPassword());
-            preparedStatement.setString(5, entity.getAbout());
+            preparedStatement.setObject(1, entity.getNickname());
+            preparedStatement.setObject(2, entity.getAbout());
+            preparedStatement.setObject(3, entity.getImage());
+            preparedStatement.setObject(4, entity.getId());
+
 
             preparedStatement.executeUpdate();
-        } catch (SQLException throwables) {
-            throw new DaoException(throwables);
         }
     }
 
@@ -130,10 +125,6 @@ public class UserDao implements Dao<Integer, UserEntity> {
         }
     }
 
-    public static UserDao getInstance() {
-        return INSTANCE;
-    }
-
     private UserEntity buildUser(ResultSet resultSet) throws SQLException {
         return UserEntity.builder()
                 .id(resultSet.getObject("id", Integer.class))
@@ -145,5 +136,9 @@ public class UserDao implements Dao<Integer, UserEntity> {
                 .created_at(resultSet.getObject("created_at", Timestamp.class).toLocalDateTime())
                 .image(resultSet.getObject("image", String.class))
                 .build();
+    }
+
+    public static UserDao getInstance() {
+        return INSTANCE;
     }
 }

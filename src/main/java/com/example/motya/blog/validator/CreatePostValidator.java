@@ -9,8 +9,8 @@ public class CreatePostValidator implements Validator<CreatePostDto> {
     @Override
     public ValidationResult isValid(CreatePostDto object) {
         var validationResult = new ValidationResult();
-        if (object.getTitle() == null){
-            validationResult.add(Error.of("invalid.title","Title is invalid"));
+        if (object.getTitle() == null) {
+            validationResult.add(Error.of("invalid.title", "Title is invalid"));
         }
         return validationResult;
     }

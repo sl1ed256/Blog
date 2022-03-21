@@ -9,7 +9,6 @@ public class UrlPath {
     public static final String REGISTRATION = "/registration";
     public static final String POSTS = "/posts";
     public static final String POST = "/post";
-    public static final String BLOG = "/Blog";
-    public static final String ADMIN = "/admin";
-    public static final String USERS = "/users";
+    public static final String LOGOUT = "/logout";
+
 }
