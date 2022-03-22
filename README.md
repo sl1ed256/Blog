@@ -2,7 +2,7 @@
 
 Educational version of the web application Blog. 
 
-## Используемые технологии
+## Technologies used
 
 - Java.
 - Other:
@@ -10,7 +10,7 @@ Educational version of the web application Blog.
     - Tomcat
     - Servlets and JSP pages
 
-## Описание возможностей приложения
+## Application features
 1. Implemented MVC template (as controllers - servlets), division into layers.
 2. A system of authorization and authentication of users with various
 roles (admin and user)
